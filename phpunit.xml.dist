@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="false">
+    <testsuites>
+        <testsuite name="SerpFetcherBuilder TestSuite">
+            <directory>tests/</directory>
+            <file>SerpFetcherBuilderTest.php</file>
+        </testsuite>
+        <testsuite name="SerpFetcher TestSuite">
+            <directory>tests/</directory>
+            <file>SerpFetcherTest.php</file>
+        </testsuite>
+        <testsuite name="GoogleFetcher TestSuite">
+            <directory>tests/</directory>
+            <file>GoogleFetcherTest.php</file>
+        </testsuite>
+        <testsuite name="AskFetcher TestSuite">
+            <directory>tests/</directory>
+            <file>AskFetcherTest.php</file>
+        </testsuite>
+        <testsuite name=">BingFetcher TestSuite">
+            <directory>tests/</directory>
+            <file>BingFetcherTest.php</file>
+        </testsuite>
+        <testsuite name="YahooFetcher TestSuite">
+            <directory>tests/</directory>
+            <file>YahooFetcherTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
