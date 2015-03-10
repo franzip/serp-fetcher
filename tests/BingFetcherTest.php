@@ -51,18 +51,12 @@ class BingFetcherTest extends PHPUnit_Framework_TestCase
                                                 array('http://www.bing.com/search?q=foo'));
         $urls = $getPageUrls->invokeArgs($bingFetcher, array($SHDObject));
         $this->assertEquals(count($urls), 10);
-        foreach ($urls as $url) {
-            $this->assertEquals(1, preg_match('/^(?:https?)/', $url));
-        }
         $this->assertTrue($bingFetcher->cacheHit('http://www.bing.com/search?q=foo'));
         $this->assertFalse($bingFetcher->cacheHit('http://www.bing.com/search?q=foo&first=11'));
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo&first=11'));
         $urls = $getPageUrls->invokeArgs($bingFetcher, array($SHDObject));
         $this->assertEquals(count($urls), 10);
-        foreach ($urls as $url) {
-            $this->assertEquals(1, preg_match('/^(?:https?)/', $url));
-        }
         $this->assertTrue($bingFetcher->cacheHit('http://www.bing.com/search?q=foo'));
         $this->assertTrue($bingFetcher->cacheHit('http://www.bing.com/search?q=foo&first=11'));
         $bingFetcher->flushCache();

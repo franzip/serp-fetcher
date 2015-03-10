@@ -51,18 +51,12 @@ class GoogleFetcherTest extends PHPUnit_Framework_TestCase
                                                 array('http://www.google.com/search?q=foo'));
         $urls = $getPageUrls->invokeArgs($googleFetcher, array($SHDObject));
         $this->assertEquals(count($urls), 10);
-        foreach ($urls as $url) {
-            $this->assertEquals(1, preg_match('/^(?:https?)/', $url));
-        }
         $this->assertTrue($googleFetcher->cacheHit('http://www.google.com/search?q=foo'));
         $this->assertFalse($googleFetcher->cacheHit('https://www.google.com/search?q=foo&start=10'));
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('https://www.google.com/search?q=foo&start=10'));
         $urls = $getPageUrls->invokeArgs($googleFetcher, array($SHDObject));
         $this->assertEquals(count($urls), 10);
-        foreach ($urls as $url) {
-            $this->assertEquals(1, preg_match('/^(?:https?)/', $url));
-        }
         $this->assertTrue($googleFetcher->cacheHit('http://www.google.com/search?q=foo'));
         $this->assertTrue($googleFetcher->cacheHit('https://www.google.com/search?q=foo&start=10'));
         $googleFetcher->flushCache();

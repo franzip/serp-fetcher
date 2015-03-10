@@ -4,8 +4,6 @@ namespace Franzip\SerpFetcher\Fetchers;
 
 /**
  * Implements a SerpFetcher for Ask.
- * Ask firstpage for a given keyword contains only 9 organic results
- * instead of 10. Subsequent pages contain the usual 10.
  */
 class AskFetcher extends SerpFetcher
 {
@@ -40,9 +38,7 @@ class AskFetcher extends SerpFetcher
             $urls[] = $this->cleanUrl($href, array('/^\/url\?q=/', '/\/&amp;sa=.*/', '/&amp;sa.*/'));
         }
         // fetch only organic results
-        if (count($urls) > 10) {
-            $urls = array_slice($urls, 0, 10);
-        }
+        $urls = $this->normalizeResult($urls);
         return $urls;
     }
 
@@ -60,9 +56,7 @@ class AskFetcher extends SerpFetcher
             $titles[]  = $this->cleanText($titleText);
         }
         // fetch only organic results
-        if (count($titles) > 10) {
-            $titles = array_slice($titles, 0, 10);
-        }
+        $titles = $this->normalizeResult($titles);
         return $titles;
     }
 
@@ -80,9 +74,7 @@ class AskFetcher extends SerpFetcher
             $snippets[]  = $this->fixRepeatedSpace($snippetText);
         }
         // fetch only organic results
-        if (count($snippets) > 10) {
-            $snippets = array_slice($snippets, 0, 10);
-        }
+        $snippets = $this->normalizeResult($snippets);
         return $snippets;
     }
 }

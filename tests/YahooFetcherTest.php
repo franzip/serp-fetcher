@@ -51,19 +51,12 @@ class YahooFetcherTest extends PHPUnit_Framework_TestCase
                                                 array('https://search.yahoo.com/search?p=foo'));
         $urls = $getPageUrls->invokeArgs($yahooFetcher, array($SHDObject));
         $this->assertEquals(count($urls), 10);
-
-        foreach ($urls as $url) {
-            $this->assertEquals(1, preg_match('/^(?:https?)/', $url));
-        }
         $this->assertTrue($yahooFetcher->cacheHit('https://search.yahoo.com/search?p=foo'));
         $this->assertFalse($yahooFetcher->cacheHit('https://search.yahoo.com/search?p=foo&b=11'));
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo&b=11'));
         $urls = $getPageUrls->invokeArgs($yahooFetcher, array($SHDObject));
         $this->assertEquals(count($urls), 10);
-        foreach ($urls as $url) {
-            $this->assertEquals(1, preg_match('/^(?:https?)/', $url));
-        }
         $this->assertTrue($yahooFetcher->cacheHit('https://search.yahoo.com/search?p=foo'));
         $this->assertTrue($yahooFetcher->cacheHit('https://search.yahoo.com/search?p=foo&b=11'));
         $yahooFetcher->flushCache();

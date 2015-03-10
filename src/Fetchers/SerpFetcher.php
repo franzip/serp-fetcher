@@ -46,6 +46,9 @@ abstract class SerpFetcher
     const SHD_DEFAULT_BR_TEXT   = "\r\n";
     const SHD_DEFAULT_SPAN_TEXT = " ";
 
+    const DEFAULT_RESULT_NUMBER = 10;
+    const DEFAULT_PAD_ENTRY     = "PAD";
+
     // Search engine specific methods.
     abstract public    function fetch($url);
     abstract protected function getPageUrls($SHDObject);
@@ -299,6 +302,24 @@ abstract class SerpFetcher
 
         $dom->load($content, self::SHD_LOWERCASE, self::SHD_STRIP_RN);
         return $dom;
+    }
+
+    /**
+     * Normalize result array by slicing it or by adding padding.
+     * @param  array $resultArray
+     * @return array
+     */
+    protected function normalizeResult($resultArray)
+    {
+        $countArr = count($resultArray);
+        if ($countArr > 10) {
+            $resultArray = array_slice($resultArray, 0, 10);
+        }
+        else if ($countArr < 10) {
+            for ($i = $countArr; $i < self::DEFAULT_RESULT_NUMBER; $i++)
+                $resultArray[$i] = self::DEFAULT_PAD_ENTRY;
+        }
+        return $resultArray;
     }
 
     /**
