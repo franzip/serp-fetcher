@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/franzip/serp-fetcher.svg?branch=master)](https://travis-ci.org/franzip/serp-fetcher)
+
 # SerpFetcher
 Wrapper around SimpleHtmlDom to easily fetch data from Search Engine Result Pages with built-in caching support.
 
