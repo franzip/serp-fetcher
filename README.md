@@ -69,6 +69,8 @@ SerpFetcher($cacheDir = 'cache', $cacheTTL = 24, $caching = true,
 
 The main method `fetch()` implemented for each class returns an associative array
 with urls, snippets and titles for a given SERP url.
+If the array with fetched results has less than 10 entries, padding will be added
+to sum up to 10.
 
 ## Constructor (using Factory)
 Supply the name of the search engine and you are ready to go. It is possible
