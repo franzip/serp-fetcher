@@ -15,7 +15,7 @@ class GenericValidator
      * @param  int    $size
      * @return bool
      */
-    public function invalidContent($content, $size)
+    static public function invalidContent($content, $size)
     {
         return (empty($content) || strlen($content) > $size);
     }
