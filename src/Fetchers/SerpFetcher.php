@@ -1,7 +1,10 @@
 <?php
 
 namespace Franzip\SerpFetcher\Fetchers;
+use Franzip\SerpFetcher\Helpers\FileSystemHelper;
+use Franzip\SerpFetcher\Helpers\GenericValidator;
 use ThauEx\SimpleHtmlDom\SimpleHtmlDom;
+
 
 /**
  * Abstract class describing a SerpFetcher.
@@ -70,14 +73,14 @@ abstract class SerpFetcher
                                 $cacheForever = self::DEFAULT_CACHING_FOREVER,
                                 $charset      = self::DEFAULT_TARGET_CHARSET)
     {
-        if (self::argsValidation($cacheDir, $cacheTTL, $caching, $cacheForever,
-                                 $charset)) {
+        if (GenericValidator::argsValidation($cacheDir, $cacheTTL, $caching,
+                                             $cacheForever, $charset)) {
             $this->cacheDir     = $cacheDir;
             $this->cacheTTL     = $cacheTTL;
             $this->caching      = $caching;
             $this->cacheForever = $cacheForever;
             $this->charset      = $charset;
-            $this->setUpCache($cacheDir);
+            FileSystemHelper::setUpDir($cacheDir);
         } else {
             throw new \InvalidArgumentException("Something went wrong with the supplied arguments. Check them and try again.");
         }
@@ -89,9 +92,10 @@ abstract class SerpFetcher
      * @return bool
      */
     public function cacheHit($url) {
-        $file = $this->getCachedEntry($url);
-        return $this->isCaching() && $this->cacheEntryExists($file)
-            && $this->validCache($file);
+        $file = FileSystemHelper::getCachedEntry($url, $this->getCacheDir());
+        return $this->isCaching() && FileSystemHelper::cacheEntryExists($file)
+            && FileSystemHelper::validCache($file, $this->getCacheTTL(),
+                                            $this->isCachingForever);
     }
 
     /**
@@ -100,7 +104,7 @@ abstract class SerpFetcher
      */
     public function flushCache()
     {
-        $this->rrmdir($this->cacheDir, false);
+        FileSystemHelper::rrmdir($this->getCacheDir(), false);
     }
 
     /**
@@ -111,7 +115,7 @@ abstract class SerpFetcher
      */
     public function removeCache()
     {
-        $this->rrmdir($this->getCacheDir());
+        FileSystemHelper::rrmdir($this->getCacheDir());
         $this->disableCaching();
     }
 
@@ -131,9 +135,9 @@ abstract class SerpFetcher
      */
     public function setCacheDir($dir)
     {
-        if (self::validCacheDir($dir)) {
+        if (GenericValidator::validDirName($dir)) {
             $this->cacheDir = $dir;
-            $this->setUpCache($dir);
+            FileSystemHelper::setUpDir($dir);
             return true;
         }
         return false;
@@ -155,7 +159,7 @@ abstract class SerpFetcher
      */
     public function setCacheTTL($hours)
     {
-        if (self::validCacheTTL($hours)) {
+        if (GenericValidator::validExpirationTime($hours)) {
             $this->cacheTTL = $hours;
             return true;
         }
@@ -178,7 +182,7 @@ abstract class SerpFetcher
      */
     public function enableCaching()
     {
-        if (self::folderExists($this->getCacheDir())) {
+        if (FileSystemHelper::folderExists($this->getCacheDir())) {
             $this->caching = true;
             return true;
         }
@@ -241,7 +245,7 @@ abstract class SerpFetcher
      */
     public function setCharset($charset)
     {
-        if (self::validCharset($charset)) {
+        if (GenericValidator::validCharset($charset)) {
             $this->charset = $charset;
             return true;
         }
@@ -291,7 +295,7 @@ abstract class SerpFetcher
     {
         $content = $this->fetchSerpContent($url);
 
-        if ($this->invalidContent($content))
+        if (GenericValidator::invalidContent($content, self::DEFAULT_MAX_FILE_SIZE))
             return false;
 
         $dom = new SimpleHtmlDom(null, self::SHD_USE_INCLUDE_PATH,
@@ -330,7 +334,7 @@ abstract class SerpFetcher
      */
     private function fetchSerpContent($url)
     {
-        $file = $this->getCachedEntry($url);
+        $file = FileSystemHelper::getCachedEntry($url, $this->getCacheDir());
 
         if ($this->cacheHit($url)) {
             return file_get_contents($file);
@@ -343,153 +347,5 @@ abstract class SerpFetcher
         file_put_contents($file, $content);
 
         return utf8_encode($content);
-    }
-
-    /**
-     * Check if fetched content is valid.
-     * @param  string $content
-     * @return bool
-     */
-    private function invalidContent($content)
-    {
-        return (empty($content) || strlen($content) > self::DEFAULT_MAX_FILE_SIZE);
-    }
-
-    /**
-     * Check if a given cache entry is still valid.
-     * Will always return true if permanent caching has been set on.
-     * @param  string $file
-     * @return bool
-     */
-    private function validCache($file)
-    {
-        $currentTime = time();
-        $expireTime  = $this->getCacheTTL() * 60 * 60;
-        $fileTime    = filemtime($file);
-        return ($currentTime - $expireTime < $fileTime)
-                or $this->isCachingForever();
-    }
-
-    /**
-     * Get the path to the cached file for the given url.
-     * Each url will generate a unique hash that will be used as filename.
-     * @param  string $url
-     * @return string
-     */
-    private function getCachedEntry($url)
-    {
-        return $this->getCacheDir() . DIRECTORY_SEPARATOR . md5($url);
-    }
-
-    /**
-     * Check if there exists a cached result for the given filename.
-     * @param  string $file
-     * @return bool
-     */
-    private function cacheEntryExists($file)
-    {
-        return file_exists($file);
-    }
-
-    /**
-     * Create the cache folder if it isn't there yet.
-     * @param string $dir
-     */
-    private function setUpCache($dir)
-    {
-        if (!self::folderExists($dir)) {
-            mkdir($dir, 0755, true);
-        }
-    }
-
-    /**
-     * Check if a folder exists.
-     * @param  string $dir
-     * @return bool
-     */
-    private function folderExists($dir)
-    {
-        return file_exists($dir) && is_dir($dir);
-    }
-
-    /**
-     * Recursively remove nested dirs and files in $dir by default.
-     * If $removeDirs is false, only files will be removed.
-     * @param  string  $dir
-     * @param  bool    $removeDirs
-     */
-    private function rrmdir($dir, $removeDirs = true)
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir")
-                        $this->rrmdir($dir."/".$object);
-                    else
-                        unlink($dir."/".$object);
-                }
-            }
-            reset($objects);
-            if ($removeDirs)
-                rmdir($dir);
-        }
-    }
-
-    /**
-     * Perform validation on __construct call.
-     * @param  string $cacheDir
-     * @param  int    $cacheTTL
-     * @param  bool   $caching
-     * @param  bool   $cacheForever
-     * @param  string $charset
-     * @return bool
-     */
-    static private function argsValidation($cacheDir, $cacheTTL, $caching,
-                                           $cacheForever, $charset)
-    {
-        return self::validCacheDir($cacheDir) && self::validCacheTTL($cacheTTL)
-               && self::validCacheOpt($caching) && self::validCacheOpt($cacheForever)
-               && self::validCharset($charset);
-    }
-
-    /**
-     * Validate Cache dir option
-     * @param  string $dir
-     * @return bool
-     */
-    static private function validCacheDir($dir)
-    {
-        return is_string($dir) && !empty($dir);
-    }
-
-    /**
-     * Validate Cache expiration option
-     * @param  int $hours
-     * @return bool
-     */
-    static private function validCacheTTL($hours)
-    {
-        return is_int($hours) && $hours > 0;
-    }
-
-    /**
-     * Validate Caching options
-     * @param  bool $opt
-     * @return bool
-     */
-    static private function validCacheOpt($opt)
-    {
-        return is_bool($opt);
-    }
-
-    /**
-     * Validate Charset
-     * @param  string $charset
-     * @return bool
-     */
-    static private function validCharset($charset)
-    {
-        return is_string($charset) && !empty($charset);
     }
 }
