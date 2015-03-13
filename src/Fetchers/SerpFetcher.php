@@ -95,7 +95,7 @@ abstract class SerpFetcher
         $file = FileSystemHelper::getCachedEntry($url, $this->getCacheDir());
         return $this->isCaching() && FileSystemHelper::cacheEntryExists($file)
             && FileSystemHelper::validCache($file, $this->getCacheTTL(),
-                                            $this->isCachingForever);
+                                            $this->isCachingForever());
     }
 
     /**
