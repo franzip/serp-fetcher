@@ -11,7 +11,7 @@ use ThauEx\SimpleHtmlDom\SimpleHtmlDom;
  * All the commonalities are factored out here and implemented directly.
  * Each concrete Fetcher subclass should only be concerned about the way it
  * extracts data from the SimpleHtmlDom wrapper, implementing the following methods:
- * getPageUrls(), getPageTitles(), getPageSnippets(), fetch().
+ * getPageUrls(), getPageTitles(), getPageSnippets().
  * Usage of a different charset (UTF-8 is used as default) has not been
  * implemented and tested yet.
  */
@@ -53,7 +53,6 @@ abstract class SerpFetcher
     const DEFAULT_PAD_ENTRY     = "PAD";
 
     // Search engine specific methods.
-    abstract public    function fetch($url);
     abstract protected function getPageUrls($SHDObject);
     abstract protected function getPageTitles($SHDObject);
     abstract protected function getPageSnippets($SHDObject);
@@ -87,6 +86,23 @@ abstract class SerpFetcher
     }
 
     /**
+     * Get a multidimensional array with urls, titles and snippets for a given
+     * SERP url.
+     * @param  string $url
+     * @return array
+     */
+    public function fetch($url)
+    {
+        $SHDObject = $this->getSHDWrapper($url);
+        $urls      = $this->getPageUrls($SHDObject);
+        $titles    = $this->getPageTitles($SHDObject);
+        $snippets  = $this->getPageSnippets($SHDObject);
+        return array('urls'     => $urls,
+                     'titles'   => $titles,
+                     'snippets' => $snippets);
+    }
+
+    /**
      * Check if cache should be hit for a given url request.
      * @param  string $url
      * @return bool
@@ -94,8 +110,8 @@ abstract class SerpFetcher
     public function cacheHit($url) {
         $file = FileSystemHelper::getCachedEntry($url, $this->getCacheDir());
         return $this->isCaching() && FileSystemHelper::cacheEntryExists($file)
-            && FileSystemHelper::validCache($file, $this->getCacheTTL(),
-                                            $this->isCachingForever());
+               && FileSystemHelper::validCache($file, $this->getCacheTTL(),
+                                               $this->isCachingForever());
     }
 
     /**

@@ -3,27 +3,10 @@
 namespace Franzip\SerpFetcher\Fetchers;
 
 /**
- * Implements a SerpFetcher for Bing.
+ * Implements a SerpFetcher for Bing search engine.
  */
 class BingFetcher extends SerpFetcher
 {
-    /**
-     * Get a multidimensional array with urls, titles and snippets for a given
-     * Bing SERP url.
-     * @param  string $url
-     * @return array
-     */
-    public function fetch($url)
-    {
-        $SHDObject = $this->getSHDWrapper($url);
-        $urls      = $this->getPageUrls($SHDObject);
-        $titles    = $this->getPageTitles($SHDObject);
-        $snippets  = $this->getPageSnippets($SHDObject);
-        return array('urls'     => $urls,
-                     'titles'   => $titles,
-                     'snippets' => $snippets);
-    }
-
     /**
      * Get all urls for a given Bing SERP page.
      * @param  SimpleHtmlDom $SHDObject
@@ -38,8 +21,7 @@ class BingFetcher extends SerpFetcher
             $urls[] = $this->cleanUrl($href, array('/^\/url\?q=/', '/\/&amp;sa=.*/', '/&amp;sa.*/'));
         }
         // fetch only organic results
-        $urls = $this->normalizeResult($urls);
-        return $urls;
+        return $this->normalizeResult($urls);
     }
 
     /**
@@ -56,8 +38,7 @@ class BingFetcher extends SerpFetcher
             $titles[]  = $this->cleanText($titleText);
         }
         // fetch only organic results
-        $titles = $this->normalizeResult($titles);
-        return $titles;
+        return $this->normalizeResult($titles);
     }
 
     /**
@@ -74,7 +55,6 @@ class BingFetcher extends SerpFetcher
             $snippets[]  = $this->fixRepeatedSpace($snippetText);
         }
         // fetch only organic results
-        $snippets = $this->normalizeResult($snippets);
-        return $snippets;
+        return $this->normalizeResult($snippets);
     }
 }
