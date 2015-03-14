@@ -10,7 +10,7 @@ class GenericValidator
     private function __construct() {}
 
     /**
-     * Check if fetched content is valid.
+     * Check if content is valid.
      * @param  string $content
      * @param  int    $size
      * @return bool
@@ -48,7 +48,7 @@ class GenericValidator
     }
 
     /**
-     * Validate Cache expiration option
+     * Validate cache expiration option
      * @param  int $hours
      * @return bool
      */
@@ -58,7 +58,7 @@ class GenericValidator
     }
 
     /**
-     * Validate Caching options
+     * Validate caching option
      * @param  bool $opt
      * @return bool
      */
@@ -68,7 +68,7 @@ class GenericValidator
     }
 
     /**
-     * Validate Charset
+     * Validate charset
      * @param  string $charset
      * @return bool
      */
