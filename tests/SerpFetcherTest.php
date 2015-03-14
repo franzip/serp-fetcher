@@ -43,7 +43,7 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         $dir = new \DirectoryIterator(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
-        $dontDelete = array('tests', 'src', 'vendor');
+        $dontDelete = array('tests', 'src', 'vendor', '.git');
         foreach ($dir as $fileinfo) {
             if ($fileinfo->isDir() && !$fileinfo->isDot()
                 && !in_array($fileinfo->getFileName(), $dontDelete)) {
