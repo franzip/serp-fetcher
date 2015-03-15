@@ -1,52 +1,22 @@
 <?php
 
 namespace Franzip\SerpFetcher\BingFetcher\Test;
+use Franzip\SerpFetcher\Helpers\TestHelper;
 use Franzip\SerpFetcher\SerpFetcherBuilder as Builder;
 use \PHPUnit_Framework_TestCase as PHPUnit_Framework_TestCase;
 
 class BingFetcherTest extends PHPUnit_Framework_TestCase
 {
-    public function rrmdir($dir) {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir")
-                        $this->rrmdir($dir."/".$object);
-                    else
-                        unlink($dir."/".$object);
-                }
-            }
-            reset($objects);
-            rmdir($dir);
-        }
-    }
-
-    protected static function getMethod($name, $className) {
-        $classQualifiedName = Builder::FETCHER_CLASS_PREFIX . $className . Builder::FETCHER_CLASS_SUFFIX;
-        $class = new \ReflectionClass($classQualifiedName);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
-    }
-
     protected function tearDown()
     {
-        $dir = new \DirectoryIterator(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
-        $dontDelete = array('tests', 'src', 'vendor', '.git');
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDir() && !$fileinfo->isDot()
-                && !in_array($fileinfo->getFileName(), $dontDelete)) {
-                $this->rrmdir($fileinfo->getFilename());
-            }
-        }
+        TestHelper::cleanMess();
     }
 
     public function testFetchingPageUrls()
     {
         $bingFetcher = Builder::create('Bing');
-        $getPageUrls = self::getMethod('getPageUrls', 'Bing');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Bing');
+        $getPageUrls = TestHelper::getMethod('getPageUrls', 'Bing');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Bing');
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo'));
         $urls = $getPageUrls->invokeArgs($bingFetcher, array($SHDObject));
@@ -68,8 +38,8 @@ class BingFetcherTest extends PHPUnit_Framework_TestCase
     public function testFetchingPageTitles()
     {
         $bingFetcher = Builder::create('Bing');
-        $getPageTitles = self::getMethod('getPageTitles', 'Bing');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Bing');
+        $getPageTitles = TestHelper::getMethod('getPageTitles', 'Bing');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Bing');
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo'));
         $titles = $getPageTitles->invokeArgs($bingFetcher, array($SHDObject));
@@ -97,8 +67,8 @@ class BingFetcherTest extends PHPUnit_Framework_TestCase
     public function testFetchingPageSnippets()
     {
         $bingFetcher = Builder::create('Bing');
-        $getPageSnippets = self::getMethod('getPageSnippets', 'Bing');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Bing');
+        $getPageSnippets = TestHelper::getMethod('getPageSnippets', 'Bing');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Bing');
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo'));
         $snippets = $getPageSnippets->invokeArgs($bingFetcher, array($SHDObject));

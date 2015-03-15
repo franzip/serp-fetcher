@@ -1,52 +1,22 @@
 <?php
 
 namespace Franzip\SerpFetcher\YahooFetcher\Test;
+use Franzip\SerpFetcher\Helpers\TestHelper;
 use Franzip\SerpFetcher\SerpFetcherBuilder as Builder;
 use \PHPUnit_Framework_TestCase as PHPUnit_Framework_TestCase;
 
 class YahooFetcherTest extends PHPUnit_Framework_TestCase
 {
-    public function rrmdir($dir) {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir")
-                        $this->rrmdir($dir."/".$object);
-                    else
-                        unlink($dir."/".$object);
-                }
-            }
-            reset($objects);
-            rmdir($dir);
-        }
-    }
-
-    protected static function getMethod($name, $className) {
-        $classQualifiedName = Builder::FETCHER_CLASS_PREFIX . $className . Builder::FETCHER_CLASS_SUFFIX;
-        $class = new \ReflectionClass($classQualifiedName);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
-    }
-
     protected function tearDown()
     {
-        $dir = new \DirectoryIterator(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
-        $dontDelete = array('tests', 'src', 'vendor', '.git');
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDir() && !$fileinfo->isDot()
-                && !in_array($fileinfo->getFileName(), $dontDelete)) {
-                $this->rrmdir($fileinfo->getFilename());
-            }
-        }
+        TestHelper::cleanMess();
     }
 
     public function testFetchingPageUrls()
     {
         $yahooFetcher = Builder::create('Yahoo');
-        $getPageUrls = self::getMethod('getPageUrls', 'Yahoo');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Yahoo');
+        $getPageUrls = TestHelper::getMethod('getPageUrls', 'Yahoo');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Yahoo');
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo'));
         $urls = $getPageUrls->invokeArgs($yahooFetcher, array($SHDObject));
@@ -68,8 +38,8 @@ class YahooFetcherTest extends PHPUnit_Framework_TestCase
     public function testFetchingPageTitles()
     {
         $yahooFetcher = Builder::create('Yahoo');
-        $getPageTitles = self::getMethod('getPageTitles', 'Yahoo');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Yahoo');
+        $getPageTitles = TestHelper::getMethod('getPageTitles', 'Yahoo');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Yahoo');
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo'));
         $titles = $getPageTitles->invokeArgs($yahooFetcher, array($SHDObject));
@@ -97,8 +67,8 @@ class YahooFetcherTest extends PHPUnit_Framework_TestCase
     public function testFetchingPageSnippets()
     {
         $yahooFetcher = Builder::create('Yahoo');
-        $getPageSnippets = self::getMethod('getPageSnippets', 'Yahoo');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Yahoo');
+        $getPageSnippets = TestHelper::getMethod('getPageSnippets', 'Yahoo');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Yahoo');
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo'));
         $snippets = $getPageSnippets->invokeArgs($yahooFetcher, array($SHDObject));

@@ -1,6 +1,7 @@
 <?php
 
 namespace Franzip\SerpFetcher\SerpFetcherBuilder\Test;
+use Franzip\SerpFetcher\Helpers\TestHelper;
 use Franzip\SerpFetcher\SerpFetcherBuilder as Builder;
 use \PHPUnit_Framework_TestCase as PHPUnit_Framework_TestCase;
 
@@ -14,32 +15,9 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
         $this->engines = $engines;
     }
 
-    public function rrmdir($dir) {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir")
-                        $this->rrmdir($dir."/".$object);
-                    else
-                        unlink($dir."/".$object);
-                }
-            }
-            reset($objects);
-            rmdir($dir);
-        }
-    }
-
     protected function tearDown()
     {
-        $dir = new \DirectoryIterator(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
-        $dontDelete = array('tests', 'src', 'vendor', '.git');
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDir() && !$fileinfo->isDot()
-                && !in_array($fileinfo->getFileName(), $dontDelete)) {
-                $this->rrmdir($fileinfo->getFilename());
-            }
-        }
+        TestHelper::cleanMess();
     }
 
     /**

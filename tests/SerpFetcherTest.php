@@ -1,6 +1,7 @@
 <?php
 
 namespace Franzip\SerpFetcher\SerpFetcher\Test;
+use Franzip\SerpFetcher\Helpers\TestHelper;
 use Franzip\SerpFetcher\SerpFetcherBuilder as Builder;
 use \PHPUnit_Framework_TestCase as PHPUnit_Framework_TestCase;
 
@@ -16,40 +17,9 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->junkFiles = $junkFiles;
     }
 
-    public function rrmdir($dir) {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir")
-                        $this->rrmdir($dir."/".$object);
-                    else
-                        unlink($dir."/".$object);
-                }
-            }
-            reset($objects);
-            rmdir($dir);
-        }
-    }
-
-    protected static function getMethod($name, $className) {
-        $classQualifiedName = Builder::FETCHER_CLASS_PREFIX . $className . Builder::FETCHER_CLASS_SUFFIX;
-        $class = new \ReflectionClass($classQualifiedName);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
-    }
-
     protected function tearDown()
     {
-        $dir = new \DirectoryIterator(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
-        $dontDelete = array('tests', 'src', 'vendor', '.git');
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDir() && !$fileinfo->isDot()
-                && !in_array($fileinfo->getFileName(), $dontDelete)) {
-                $this->rrmdir($fileinfo->getFilename());
-            }
-        }
+        TestHelper::cleanMess();
     }
 
     public function testSettersGetters()
@@ -294,8 +264,8 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
     public function testFetchingMethods()
     {
         $googleFetcher = Builder::create($this->engines[0]);
-        $fetchSerpContent = self::getMethod('fetchSerpContent', 'Google');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Google');
+        $fetchSerpContent = TestHelper::getMethod('fetchSerpContent', 'Google');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Google');
         $this->assertFalse($googleFetcher->cacheHit("http://www.google.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($googleFetcher,
                                                         array('http://www.google.com/search?q=foo'));
@@ -352,8 +322,8 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $askFetcher = Builder::create($this->engines[1],
                                       array('bar' . DIRECTORY_SEPARATOR . 'foo',
                                             1, false));
-        $fetchSerpContent = self::getMethod('fetchSerpContent', 'Ask');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Ask');
+        $fetchSerpContent = TestHelper::getMethod('fetchSerpContent', 'Ask');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Ask');
 
         $this->assertFalse($askFetcher->cacheHit("http://us.ask.com/web?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($askFetcher,
@@ -413,8 +383,8 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($askFetcher->cacheHit("http://us.ask.com/web?q=foobar"));
         $bingFetcher = Builder::create($this->engines[2],
                                        array('foobar', 48, true, true, 'UTF-16'));
-        $fetchSerpContent = self::getMethod('fetchSerpContent', 'Bing');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Bing');
+        $fetchSerpContent = TestHelper::getMethod('fetchSerpContent', 'Bing');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Bing');
 
         $this->assertFalse($bingFetcher->cacheHit("http://www.bing.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($bingFetcher,
@@ -471,8 +441,8 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($bingFetcher->cacheHit("http://www.bing.com/search?q=foobar"));
         $yahooFetcher = Builder::create($this->engines[2],
                                        array('fubar', 48, true, true, 'UTF-16'));
-        $fetchSerpContent = self::getMethod('fetchSerpContent', 'Yahoo');
-        $getSHDWrapper = self::getMethod('getSHDWrapper', 'Yahoo');
+        $fetchSerpContent = TestHelper::getMethod('fetchSerpContent', 'Yahoo');
+        $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Yahoo');
 
         $this->assertFalse($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($yahooFetcher,
