@@ -121,7 +121,7 @@ abstract class SerpFetcher
     public function cacheHit($url) {
         $file = FileSystemHelper::getCachedEntry($url, $this->getCacheDir());
         return $this->isCaching() && FileSystemHelper::cacheEntryExists($file)
-               && FileSystemHelper::validCache($file, $this->getCacheTTL(),
+               && FileSystemHelper::validateCache($file, $this->getCacheTTL(),
                                                $this->isCachingForever());
     }
 
@@ -162,7 +162,7 @@ abstract class SerpFetcher
      */
     public function setCacheDir($dir)
     {
-        if (GenericValidator::validDirName($dir)) {
+        if (GenericValidator::validateDirName($dir)) {
             $this->cacheDir = $dir;
             FileSystemHelper::setUpDir($dir);
             return true;
@@ -186,7 +186,7 @@ abstract class SerpFetcher
      */
     public function setCacheTTL($hours)
     {
-        if (GenericValidator::validExpirationTime($hours)) {
+        if (GenericValidator::validateExpirationTime($hours)) {
             $this->cacheTTL = $hours;
             return true;
         }
@@ -272,7 +272,7 @@ abstract class SerpFetcher
      */
     public function setCharset($charset)
     {
-        if (GenericValidator::validCharset($charset)) {
+        if (GenericValidator::validateCharset($charset)) {
             $this->charset = $charset;
             return true;
         }
