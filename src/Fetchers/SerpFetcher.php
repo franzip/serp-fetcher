@@ -2,7 +2,7 @@
 
 /**
  * SerpFetcher -- Wrapper around SimpleHtmlDom to fetch data from Search Engine result pages with cache support.
- * @version 0.1.0
+ * @version 0.2.0
  * @author Francesco Pezzella <franzpezzella@gmail.com>
  * @link https://github.com/franzip/serp-fetcher
  * @copyright Copyright 2015 Francesco Pezzella
