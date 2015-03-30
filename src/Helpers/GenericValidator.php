@@ -20,20 +20,30 @@ class GenericValidator
     }
 
     /**
-     * Perform validation on arguments.
+     * Perform validation on SerpFetcher constructor arguments.
      * @param  string $cacheDir
      * @param  int    $cacheTTL
      * @param  bool   $caching
      * @param  bool   $cacheForever
      * @param  string $charset
-     * @return bool
      */
     static public function argsValidation($cacheDir, $cacheTTL, $caching,
                                           $cacheForever, $charset)
     {
-        return self::validDirName($cacheDir) && self::validExpirationTime($cacheTTL)
-               && self::validCacheOpt($caching) && self::validCacheOpt($cacheForever)
-               && self::validCharset($charset);
+        if (!self::validateDirName($cacheDir))
+            throw new \Franzip\SerpFetcher\Exceptions\InvalidArgumentException('Invalid SerpFetcher $cacheDir: please supply a valid non-empty string.');
+
+        if (!self::validateExpirationTime($cacheTTL))
+            throw new \Franzip\SerpFetcher\Exceptions\InvalidArgumentException('Invalid SerpFetcher $cacheTTL: please supply a positive integer.');
+
+        if (!self::validateCacheOpt($caching))
+            throw new \Franzip\SerpFetcher\Exceptions\InvalidArgumentException('Invalid SerpFetcher $caching: please supply a boolean value.');
+
+        if (!self::validateCacheOpt($cacheForever))
+            throw new \Franzip\SerpFetcher\Exceptions\InvalidArgumentException('Invalid SerpFetcher $cacheForever: please supply a boolean value.');
+
+        if (!self::validateCharset($charset))
+            throw new \Franzip\SerpFetcher\Exceptions\InvalidArgumentException('Invalid SerpFetcher $charset: please supply a valid non-empty string.');
     }
 
     /**
@@ -41,7 +51,7 @@ class GenericValidator
      * @param  string $dir
      * @return bool
      */
-    static public function validDirName($dir)
+    static public function validateDirName($dir)
     {
         return is_string($dir) && !empty($dir);
     }
@@ -51,7 +61,7 @@ class GenericValidator
      * @param  int $hours
      * @return bool
      */
-    static public function validExpirationTime($hours)
+    static public function validateExpirationTime($hours)
     {
         return is_int($hours) && $hours > 0;
     }
@@ -61,7 +71,7 @@ class GenericValidator
      * @param  bool $opt
      * @return bool
      */
-    static public function validCacheOpt($opt)
+    static public function validateCacheOpt($opt)
     {
         return is_bool($opt);
     }
@@ -71,7 +81,7 @@ class GenericValidator
      * @param  string $charset
      * @return bool
      */
-    static public function validCharset($charset)
+    static public function validateCharset($charset)
     {
         return is_string($charset) && !empty($charset);
     }
