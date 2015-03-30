@@ -21,7 +21,7 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
+     * @expectedException        \Franzip\SerpFetcher\Exceptions\UnsupportedEngineException
      * @expectedExceptionMessage Unknown or unsupported Search Engine.
      */
     public function testInvalidEngineArgument()
@@ -30,8 +30,8 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Something went wrong with the supplied arguments. Check them and try again.
+     * @expectedException        \Franzip\SerpFetcher\Exceptions\InvalidArgumentException
+     * @expectedExceptionMessage Invalid SerpFetcher $cacheTTL: please supply a positive integer.
      */
     public function testInvalidAddArgument1()
     {
@@ -39,8 +39,8 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Something went wrong with the supplied arguments. Check them and try again.
+     * @expectedException        \Franzip\SerpFetcher\Exceptions\InvalidArgumentException
+     * @expectedExceptionMessage Invalid SerpFetcher $cacheTTL: please supply a positive integer.
      */
     public function testInvalidAddArgument2()
     {
@@ -48,8 +48,8 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Something went wrong with the supplied arguments. Check them and try again.
+     * @expectedException        \Franzip\SerpFetcher\Exceptions\InvalidArgumentException
+     * @expectedExceptionMessage Invalid SerpFetcher $caching: please supply a boolean value.
      */
     public function testInvalidAddArgument3()
     {
@@ -57,8 +57,8 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Something went wrong with the supplied arguments. Check them and try again.
+     * @expectedException        \Franzip\SerpFetcher\Exceptions\InvalidArgumentException
+     * @expectedExceptionMessage Invalid SerpFetcher $cacheForever: please supply a boolean value.
      */
     public function testInvalidAddArgument4()
     {
@@ -66,8 +66,8 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Something went wrong with the supplied arguments. Check them and try again.
+     * @expectedException        \Franzip\SerpFetcher\Exceptions\InvalidArgumentException
+     * @expectedExceptionMessage Invalid SerpFetcher $charset: please supply a valid non-empty string.
      */
     public function testInvalidAddArgument5()
     {
@@ -77,13 +77,13 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
     public function testFetcherTypes()
     {
         $googleFetcher = Builder::create($this->engines[0]);
-        $this->assertEquals("Franzip\SerpFetcher\Fetchers\GoogleFetcher", get_class($googleFetcher));
+        $this->assertInstanceOf('Franzip\SerpFetcher\Fetchers\GoogleFetcher', $googleFetcher);
         $askFetcher = Builder::create($this->engines[1]);
-        $this->assertEquals("Franzip\SerpFetcher\Fetchers\AskFetcher", get_class($askFetcher));
+        $this->assertInstanceOf('Franzip\SerpFetcher\Fetchers\AskFetcher', $askFetcher);
         $bingFetcher = Builder::create($this->engines[2]);
-        $this->assertEquals("Franzip\SerpFetcher\Fetchers\BingFetcher", get_class($bingFetcher));
+        $this->assertInstanceOf('Franzip\SerpFetcher\Fetchers\BingFetcher', $bingFetcher);
         $yahooFetcher = Builder::create($this->engines[3]);
-        $this->assertEquals("Franzip\SerpFetcher\Fetchers\YahooFetcher", get_class($yahooFetcher));
+        $this->assertInstanceOf('Franzip\SerpFetcher\Fetchers\YahooFetcher', $yahooFetcher);
     }
 
     public function testFactoryWithoutArgs()
@@ -94,18 +94,21 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($googleFetcher->getCharset(), 'UTF-8');
         $this->assertTrue($googleFetcher->isCaching());
         $this->assertFalse($googleFetcher->isCachingForever());
+
         $askFetcher = Builder::create($this->engines[1]);
         $this->assertEquals($askFetcher->getCacheDir(), 'cache');
         $this->assertEquals($askFetcher->getCacheTTL(), 24);
         $this->assertEquals($askFetcher->getCharset(), 'UTF-8');
         $this->assertTrue($askFetcher->isCaching());
         $this->assertFalse($askFetcher->isCachingForever());
+
         $bingFetcher = Builder::create($this->engines[2]);
         $this->assertEquals($bingFetcher->getCacheDir(), 'cache');
         $this->assertEquals($bingFetcher->getCacheTTL(), 24);
         $this->assertEquals($bingFetcher->getCharset(), 'UTF-8');
         $this->assertTrue($bingFetcher->isCaching());
         $this->assertFalse($bingFetcher->isCachingForever());
+
         $yahooFetcher = Builder::create($this->engines[3]);
         $this->assertEquals($yahooFetcher->getCacheDir(), 'cache');
         $this->assertEquals($yahooFetcher->getCacheTTL(), 24);
@@ -123,6 +126,7 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($googleFetcher->getCharset(), 'UTF-16');
         $this->assertTrue($googleFetcher->isCaching());
         $this->assertTrue($googleFetcher->isCachingForever());
+
         $askFetcher = Builder::create($this->engines[1],
                                       array('bar' . DIRECTORY_SEPARATOR . 'foo',
                                             1, false));
@@ -131,6 +135,7 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($askFetcher->getCharset(), 'UTF-8');
         $this->assertFalse($askFetcher->isCaching());
         $this->assertFalse($askFetcher->isCachingForever());
+
         $bingFetcher = Builder::create($this->engines[2],
                                        array('foo'));
         $this->assertEquals($bingFetcher->getCacheDir(), 'foo');
@@ -138,6 +143,7 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($bingFetcher->getCharset(), 'UTF-8');
         $this->assertTrue($bingFetcher->isCaching());
         $this->assertFalse($bingFetcher->isCachingForever());
+
         $yahooFetcher = Builder::create($this->engines[3],
                                          array('foo'));
         $this->assertEquals($yahooFetcher->getCacheDir(), 'foo');

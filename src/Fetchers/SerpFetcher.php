@@ -83,17 +83,17 @@ abstract class SerpFetcher
                                 $cacheForever = self::DEFAULT_CACHING_FOREVER,
                                 $charset      = self::DEFAULT_TARGET_CHARSET)
     {
-        if (GenericValidator::argsValidation($cacheDir, $cacheTTL, $caching,
-                                             $cacheForever, $charset)) {
-            $this->cacheDir     = $cacheDir;
-            $this->cacheTTL     = $cacheTTL;
-            $this->caching      = $caching;
-            $this->cacheForever = $cacheForever;
-            $this->charset      = $charset;
-            FileSystemHelper::setUpDir($cacheDir);
-        } else {
-            throw new \InvalidArgumentException("Something went wrong with the supplied arguments. Check them and try again.");
-        }
+        // perform validation
+        GenericValidator::argsValidation($cacheDir, $cacheTTL, $caching,
+                                         $cacheForever, $charset);
+        // set up the instance
+        $this->cacheDir     = $cacheDir;
+        $this->cacheTTL     = $cacheTTL;
+        $this->caching      = $caching;
+        $this->cacheForever = $cacheForever;
+        $this->charset      = $charset;
+        // create the cache dir if it isn't there
+        FileSystemHelper::setUpDir($cacheDir);
     }
 
     /**
@@ -235,8 +235,8 @@ abstract class SerpFetcher
     }
 
     /**
-     * Turn permanent caching on. Will fail if caching is turned off.
-     * Will not work if caching is not active.
+     * Turn permanent caching on.
+     * Will fail if caching is not active.
      * @return bool
      */
     public function enableCachingForever()
@@ -281,7 +281,7 @@ abstract class SerpFetcher
 
     /**
      * Extract urls from fetched raw html text.
-     * Allow injecting the proper regex patterns to clean for each search engine.
+     * Allow injecting the proper regex patterns to clean for a given search engine.
      * @param  string $url
      * @param  array  $patterns
      * @return string
@@ -321,18 +321,41 @@ abstract class SerpFetcher
     protected function getSHDWrapper($url)
     {
         $content = $this->fetchSerpContent($url);
-
+        // sanity check
         if (GenericValidator::invalidContent($content, self::DEFAULT_MAX_FILE_SIZE))
             return false;
-
+        // create the wrapper
         $dom = new SimpleHtmlDom(null, self::SHD_USE_INCLUDE_PATH,
                                  self::SHD_FORCE_TAGS_CLOSED,
                                  $this->getCharset(), self::SHD_STRIP_RN,
                                  self::SHD_DEFAULT_BR_TEXT,
                                  self::SHD_DEFAULT_SPAN_TEXT);
-
+        // load the fetched content in the wrapper
         $dom->load($content, self::SHD_LOWERCASE, self::SHD_STRIP_RN);
         return $dom;
+    }
+
+    /**
+     * Fetch content for a given url as a big string.
+     * This is an adaptation of SHD::getContent() method.
+     * @param  string $url
+     * @return string
+     */
+    private function fetchSerpContent($url)
+    {
+        $file = FileSystemHelper::getCachedEntry($url, $this->getCacheDir());
+        // check if we have a cache entry
+        if ($this->cacheHit($url)) {
+            return file_get_contents($file);
+        }
+        // fetch content
+        $content = file_get_contents($url, self::SHD_USE_INCLUDE_PATH,
+                                     self::SHD_CONTEXT, self::SHD_OFFSET);
+        // add cache signature
+        $content .= '<!-- cached: ' . time() . ' -->';
+        file_put_contents($file, $content);
+        // encode the string properly
+        return utf8_encode($content);
     }
 
     /**
@@ -351,28 +374,5 @@ abstract class SerpFetcher
                 $resultArray[$i] = self::DEFAULT_PAD_ENTRY;
         }
         return $resultArray;
-    }
-
-    /**
-     * Fetch content for a given url as a big string.
-     * This is an adaptation of SHD::getContent() method.
-     * @param  string $url
-     * @return string
-     */
-    private function fetchSerpContent($url)
-    {
-        $file = FileSystemHelper::getCachedEntry($url, $this->getCacheDir());
-
-        if ($this->cacheHit($url)) {
-            return file_get_contents($file);
-        }
-
-        $content = file_get_contents($url, self::SHD_USE_INCLUDE_PATH,
-                                     self::SHD_CONTEXT, self::SHD_OFFSET);
-
-        $content .= '<!-- cached: ' . time() . ' -->';
-        file_put_contents($file, $content);
-
-        return utf8_encode($content);
     }
 }
