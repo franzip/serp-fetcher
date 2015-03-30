@@ -20,13 +20,13 @@ class YahooFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo'));
         $urls = $getPageUrls->invokeArgs($yahooFetcher, array($SHDObject));
-        $this->assertEquals(count($urls), 10);
+        $this->assertCount(10, $urls);;
         $this->assertTrue($yahooFetcher->cacheHit('https://search.yahoo.com/search?p=foo'));
         $this->assertFalse($yahooFetcher->cacheHit('https://search.yahoo.com/search?p=foo&b=11'));
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo&b=11'));
         $urls = $getPageUrls->invokeArgs($yahooFetcher, array($SHDObject));
-        $this->assertEquals(count($urls), 10);
+        $this->assertCount(10, $urls);;
         $this->assertTrue($yahooFetcher->cacheHit('https://search.yahoo.com/search?p=foo'));
         $this->assertTrue($yahooFetcher->cacheHit('https://search.yahoo.com/search?p=foo&b=11'));
         $yahooFetcher->flushCache();
@@ -43,7 +43,7 @@ class YahooFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo'));
         $titles = $getPageTitles->invokeArgs($yahooFetcher, array($SHDObject));
-        $this->assertEquals(count($titles), 10);
+        $this->assertCount(10, $titles);;
         foreach ($titles as $title) {
             $this->assertTrue(is_string($title) && !empty($title));
         }
@@ -52,7 +52,7 @@ class YahooFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo&b=11'));
         $titles = $getPageTitles->invokeArgs($yahooFetcher, array($SHDObject));
-        $this->assertEquals(count($titles), 10);
+        $this->assertCount(10, $titles);;
         foreach ($titles as $title) {
             $this->assertTrue(is_string($title) && !empty($title));
         }
@@ -72,7 +72,7 @@ class YahooFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo'));
         $snippets = $getPageSnippets->invokeArgs($yahooFetcher, array($SHDObject));
-        $this->assertEquals(count($snippets), 10);
+        $this->assertCount(10, $snippets);;
         foreach ($snippets as $snippet) {
             $this->assertTrue(is_string($snippet) && !empty($snippet));
         }
@@ -81,7 +81,7 @@ class YahooFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?p=foo&b=11'));
         $snippets = $getPageSnippets->invokeArgs($yahooFetcher, array($SHDObject));
-        $this->assertEquals(count($snippets), 10);
+        $this->assertCount(10, $snippets);;
         foreach ($snippets as $snippet) {
             $this->assertTrue(is_string($snippet) && !empty($snippet));
         }
@@ -97,18 +97,18 @@ class YahooFetcherTest extends PHPUnit_Framework_TestCase
     {
         $yahooFetcher = Builder::create('Yahoo');
         $results = $yahooFetcher->fetch('https://search.yahoo.com/search?p=foo');
-        $this->assertTrue(array_key_exists('urls', $results));
-        $this->assertTrue(array_key_exists('titles', $results));
-        $this->assertTrue(array_key_exists('snippets', $results));
-        $this->assertEquals(count($results['urls']), 10);
-        $this->assertEquals(count($results['titles']), 10);
-        $this->assertEquals(count($results['snippets']), 10);
+        $this->assertArrayHasKey('urls', $results);
+        $this->assertArrayHasKey('titles', $results);
+        $this->assertArrayHasKey('snippets', $results);
+        $this->assertCount(10, $results['urls']);;
+        $this->assertCount(10, $results['titles']);;
+        $this->assertCount(10, $results['snippets']);;
         $results = $yahooFetcher->fetch('https://search.yahoo.com/search?p=foo&b=10');
-        $this->assertTrue(array_key_exists('urls', $results));
-        $this->assertTrue(array_key_exists('titles', $results));
-        $this->assertTrue(array_key_exists('snippets', $results));
-        $this->assertEquals(count($results['urls']), 10);
-        $this->assertEquals(count($results['titles']), 10);
-        $this->assertEquals(count($results['snippets']), 10);
+        $this->assertArrayHasKey('urls', $results);
+        $this->assertArrayHasKey('titles', $results);
+        $this->assertArrayHasKey('snippets', $results);
+        $this->assertCount(10, $results['urls']);;
+        $this->assertCount(10, $results['titles']);;
+        $this->assertCount(10, $results['snippets']);;
     }
 }

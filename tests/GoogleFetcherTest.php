@@ -20,13 +20,13 @@ class GoogleFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('http://www.google.com/search?q=foo'));
         $urls = $getPageUrls->invokeArgs($googleFetcher, array($SHDObject));
-        $this->assertEquals(count($urls), 10);
+        $this->assertCount(10, $urls);
         $this->assertTrue($googleFetcher->cacheHit('http://www.google.com/search?q=foo'));
         $this->assertFalse($googleFetcher->cacheHit('https://www.google.com/search?q=foo&start=10'));
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('https://www.google.com/search?q=foo&start=10'));
         $urls = $getPageUrls->invokeArgs($googleFetcher, array($SHDObject));
-        $this->assertEquals(count($urls), 10);
+        $this->assertCount(10, $urls);
         $this->assertTrue($googleFetcher->cacheHit('http://www.google.com/search?q=foo'));
         $this->assertTrue($googleFetcher->cacheHit('https://www.google.com/search?q=foo&start=10'));
         $googleFetcher->flushCache();
@@ -43,7 +43,7 @@ class GoogleFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('http://www.google.com/search?q=foo'));
         $titles = $getPageTitles->invokeArgs($googleFetcher, array($SHDObject));
-        $this->assertEquals(count($titles), 10);
+        $this->assertCount(10, $titles);
         foreach ($titles as $title) {
             $this->assertTrue(is_string($title) && !empty($title));
         }
@@ -52,7 +52,7 @@ class GoogleFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('https://www.google.com/search?q=foo&start=10'));
         $titles = $getPageTitles->invokeArgs($googleFetcher, array($SHDObject));
-        $this->assertEquals(count($titles), 10);
+        $this->assertCount(10, $titles);
         foreach ($titles as $title) {
             $this->assertTrue(is_string($title) && !empty($title));
         }
@@ -72,7 +72,7 @@ class GoogleFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('http://www.google.com/search?q=foo'));
         $snippets = $getPageSnippets->invokeArgs($googleFetcher, array($SHDObject));
-        $this->assertEquals(count($snippets), 10);
+        $this->assertCount(10, $snippets);
         foreach ($snippets as $snippet) {
             $this->assertTrue(is_string($snippet));
         }
@@ -81,7 +81,7 @@ class GoogleFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('https://www.google.com/search?q=foo&start=10'));
         $snippets = $getPageSnippets->invokeArgs($googleFetcher, array($SHDObject));
-        $this->assertEquals(count($snippets), 10);
+        $this->assertCount(10, $snippets);
         foreach ($snippets as $snippet) {
             $this->assertTrue(is_string($snippet));
         }
@@ -97,11 +97,11 @@ class GoogleFetcherTest extends PHPUnit_Framework_TestCase
     {
         $googleFetcher = Builder::create('Google');
         $results = $googleFetcher->fetch('http://www.google.com/search?q=foo');
-        $this->assertTrue(array_key_exists('urls', $results));
-        $this->assertTrue(array_key_exists('titles', $results));
-        $this->assertTrue(array_key_exists('snippets', $results));
-        $this->assertEquals(count($results['urls']), 10);
-        $this->assertEquals(count($results['titles']), 10);
-        $this->assertEquals(count($results['snippets']), 10);
+        $this->assertArrayHasKey('urls', $results);
+        $this->assertArrayHasKey('titles', $results);
+        $this->assertArrayHasKey('snippets', $results);
+        $this->assertCount(10, $results['urls']);
+        $this->assertCount(10, $results['titles']);
+        $this->assertCount(10, $results['snippets']);
     }
 }

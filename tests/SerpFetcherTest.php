@@ -50,6 +50,7 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($googleFetcher->isCachingForever());
         $googleFetcher->disableCachingForever();
         $this->assertFalse($googleFetcher->isCachingForever());
+
         $askFetcher = Builder::create($this->engines[1]);
         $this->assertTrue(file_exists($askFetcher->getCacheDir()) && is_dir($askFetcher->getCacheDir()));
         $this->assertEquals($askFetcher->getCacheDir(), 'cache');
@@ -72,6 +73,7 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($askFetcher->isCachingForever());
         $askFetcher->disableCachingForever();
         $this->assertFalse($askFetcher->isCachingForever());
+
         $bingFetcher = Builder::create($this->engines[2]);
         $this->assertTrue(file_exists($bingFetcher->getCacheDir()) && is_dir($bingFetcher->getCacheDir()));
         $this->assertEquals($bingFetcher->getCacheDir(), 'cache');
@@ -95,6 +97,7 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($bingFetcher->isCachingForever());
         $bingFetcher->disableCachingForever();
         $this->assertFalse($bingFetcher->isCachingForever());
+
         $yahooFetcher = Builder::create($this->engines[3]);
         $this->assertTrue(file_exists($yahooFetcher->getCacheDir()) && is_dir($yahooFetcher->getCacheDir()));
         $this->assertEquals($yahooFetcher->getCacheDir(), 'cache');
@@ -190,6 +193,7 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($googleFetcher->enableCaching());
         $this->assertEquals($googleFetcher->getCacheDir(), 'foo' . DIRECTORY_SEPARATOR . 'bar');
         $this->assertTrue(file_exists($googleFetcher->getCacheDir()) && is_dir($googleFetcher->getCacheDir()));
+
         $askFetcher = Builder::create($this->engines[1], array('bar', 24, false));
         $this->assertFalse($askFetcher->isCaching());
         $this->assertTrue(file_exists($askFetcher->getCacheDir()) && is_dir($askFetcher->getCacheDir()));
@@ -269,19 +273,17 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($googleFetcher->cacheHit("http://www.google.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($googleFetcher,
                                                         array('http://www.google.com/search?q=foo'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($googleFetcher->cacheHit("http://www.google.com/search?q=foo"));
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('http://www.google.com/search?q=foo'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertFalse($googleFetcher->cacheHit("http://www.google.com/search?q=bar"));
         $fetchedContent = $fetchSerpContent->invokeArgs($googleFetcher,
                                                         array('http://www.google.com/search?q=bar'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($googleFetcher->cacheHit("http://www.google.com/search?q=bar"));
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('http://www.google.com/search?q=bar'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $googleFetcher->disableCaching();
         $this->assertFalse($googleFetcher->cacheHit("http://www.google.com/search?q=foo"));
         $this->assertFalse($googleFetcher->cacheHit("http://www.google.com/search?q=bar"));
@@ -296,19 +298,17 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($googleFetcher->cacheHit("http://www.google.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($googleFetcher,
                                                         array('http://www.google.com/search?q=baz'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($googleFetcher->cacheHit("http://www.google.com/search?q=baz"));
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
                                                 array('http://www.google.com/search?q=baz'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertFalse($googleFetcher->cacheHit("http://www.google.com/search?q=foobar"));
         $fetchedContent = $fetchSerpContent->invokeArgs($googleFetcher,
                                                         array('http://www.google.com/search?q=foobar'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($googleFetcher->cacheHit("http://www.google.com/search?q=foobar"));
         $SHDObject = $getSHDWrapper->invokeArgs($googleFetcher,
-                                                array('http://www.google.com/search?q=foobar'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
+                                                array('http://www.google.com/search?q=foobar'));;
         $this->assertTrue($googleFetcher->setCacheDir('cache'));
         $this->assertTrue($googleFetcher->cacheHit('http://www.google.com/search?q=foo'));
         $this->assertTrue($googleFetcher->cacheHit('http://www.google.com/search?q=bar'));
@@ -319,6 +319,7 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($googleFetcher->cacheHit('http://www.google.com/search?q=bar'));
         $this->assertTrue($googleFetcher->cacheHit("http://www.google.com/search?q=baz"));
         $this->assertTrue($googleFetcher->cacheHit("http://www.google.com/search?q=foobar"));
+
         $askFetcher = Builder::create($this->engines[1],
                                       array('bar' . DIRECTORY_SEPARATOR . 'foo',
                                             1, false));
@@ -328,22 +329,20 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($askFetcher->cacheHit("http://us.ask.com/web?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($askFetcher,
                                                         array('http://us.ask.com/web?q=foo'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertFalse($askFetcher->cacheHit("http://us.ask.com/web?q=foo"));
         $this->assertTrue($askFetcher->enableCaching());
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=foo'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertTrue($askFetcher->cacheHit("http://us.ask.com/web?q=foo"));
 
         $this->assertFalse($askFetcher->cacheHit("http://us.ask.com/web?q=bar"));
         $fetchedContent = $fetchSerpContent->invokeArgs($askFetcher,
                                                         array('http://us.ask.com/web?q=bar'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($askFetcher->cacheHit("http://us.ask.com/web?q=bar"));
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=bar'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $askFetcher->disableCaching();
         $this->assertFalse($askFetcher->cacheHit("http://us.ask.com/web?q=foo"));
         $this->assertFalse($askFetcher->cacheHit("http://us.ask.com/web?q=bar"));
@@ -358,19 +357,17 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($askFetcher->cacheHit("http://us.ask.com/web?q=baz"));
         $fetchedContent = $fetchSerpContent->invokeArgs($askFetcher,
                                                         array('http://us.ask.com/web?q=baz'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($askFetcher->cacheHit("http://us.ask.com/web?q=baz"));
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=baz'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertFalse($askFetcher->cacheHit("http://us.ask.com/web?q=foobar"));
         $fetchedContent = $fetchSerpContent->invokeArgs($askFetcher,
                                                         array('http://us.ask.com/web?q=foobar'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($askFetcher->cacheHit("http://us.ask.com/web?q=foobar"));
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=foobar'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertTrue($askFetcher->setCacheDir('bar' . DIRECTORY_SEPARATOR . 'foo'));
         $this->assertTrue($askFetcher->cacheHit('http://us.ask.com/web?q=foo'));
         $this->assertTrue($askFetcher->cacheHit('http://us.ask.com/web?q=bar'));
@@ -381,6 +378,7 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($askFetcher->cacheHit('http://us.ask.com/web?q=bar'));
         $this->assertTrue($askFetcher->cacheHit("http://us.ask.com/web?q=baz"));
         $this->assertTrue($askFetcher->cacheHit("http://us.ask.com/web?q=foobar"));
+
         $bingFetcher = Builder::create($this->engines[2],
                                        array('foobar', 48, true, true, 'UTF-16'));
         $fetchSerpContent = TestHelper::getMethod('fetchSerpContent', 'Bing');
@@ -389,19 +387,17 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($bingFetcher->cacheHit("http://www.bing.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($bingFetcher,
                                                         array('http://www.bing.com/search?q=foo'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($bingFetcher->cacheHit("http://www.bing.com/search?q=foo"));
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertFalse($bingFetcher->cacheHit("http://www.bing.com/search?q=bar"));
         $fetchedContent = $fetchSerpContent->invokeArgs($bingFetcher,
                                                         array('http://www.bing.com/search?q=bar'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($bingFetcher->cacheHit("http://www.bing.com/search?q=bar"));
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=bar'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $bingFetcher->disableCaching();
         $this->assertFalse($bingFetcher->cacheHit("http://www.bing.com/search?q=foo"));
         $this->assertFalse($bingFetcher->cacheHit("http://www.bing.com/search?q=bar"));
@@ -416,19 +412,17 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($bingFetcher->cacheHit("http://www.bing.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($bingFetcher,
                                                         array('http://www.bing.com/search?q=baz'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($bingFetcher->cacheHit("http://www.bing.com/search?q=baz"));
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=baz'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertFalse($bingFetcher->cacheHit("http://www.bing.com/search?q=foobar"));
         $fetchedContent = $fetchSerpContent->invokeArgs($bingFetcher,
                                                         array('http://www.bing.com/search?q=foobar'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($bingFetcher->cacheHit("http://www.bing.com/search?q=foobar"));
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foobar'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertTrue($bingFetcher->setCacheDir('foobar'));
         $this->assertTrue($bingFetcher->cacheHit('http://www.bing.com/search?q=foo'));
         $this->assertTrue($bingFetcher->cacheHit('http://www.bing.com/search?q=bar'));
@@ -439,6 +433,7 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($bingFetcher->cacheHit('http://www.bing.com/search?q=bar'));
         $this->assertTrue($bingFetcher->cacheHit("http://www.bing.com/search?q=baz"));
         $this->assertTrue($bingFetcher->cacheHit("http://www.bing.com/search?q=foobar"));
+
         $yahooFetcher = Builder::create($this->engines[2],
                                        array('fubar', 48, true, true, 'UTF-16'));
         $fetchSerpContent = TestHelper::getMethod('fetchSerpContent', 'Yahoo');
@@ -447,19 +442,17 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($yahooFetcher,
                                                         array('https://search.yahoo.com/search?q=foo'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=foo"));
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?q=foo'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertFalse($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=bar"));
         $fetchedContent = $fetchSerpContent->invokeArgs($yahooFetcher,
                                                         array('https://search.yahoo.com/search?q=bar'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=bar"));
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?q=bar'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $yahooFetcher->disableCaching();
         $this->assertFalse($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=foo"));
         $this->assertFalse($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=bar"));
@@ -474,19 +467,17 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($yahooFetcher,
                                                         array('https://search.yahoo.com/search?q=baz'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=baz"));
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?q=baz'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertFalse($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=foobar"));
         $fetchedContent = $fetchSerpContent->invokeArgs($yahooFetcher,
                                                         array('https://search.yahoo.com/search?q=foobar'));
-        $this->assertEquals(preg_match('/^<!doctype html/i', $fetchedContent), 1);
+        $this->assertRegExp('/^<!doctype html/i', $fetchedContent);
         $this->assertTrue($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=foobar"));
         $SHDObject = $getSHDWrapper->invokeArgs($yahooFetcher,
                                                 array('https://search.yahoo.com/search?q=foobar'));
-        $this->assertTrue(is_a($SHDObject, "ThauEx\SimpleHtmlDom\SimpleHtmlDom"));
         $this->assertTrue($yahooFetcher->setCacheDir('fubar'));
         $this->assertTrue($yahooFetcher->cacheHit('https://search.yahoo.com/search?q=foo'));
         $this->assertTrue($yahooFetcher->cacheHit('https://search.yahoo.com/search?q=bar'));

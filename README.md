@@ -190,7 +190,7 @@ $googleFetcher->setCacheDir('foo');
 - [x] A decent exceptions system.
 - [ ] Support for HHVM.
 - [ ] Implement and test different charset support.
-- [ ] Refactoring messy tests.
+- [x] Refactoring messy tests.
 
 ## License
 [MIT](http://opensource.org/licenses/MIT/ "MIT") Public License.

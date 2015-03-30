@@ -20,13 +20,13 @@ class AskFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=foo'));
         $urls = $getPageUrls->invokeArgs($askFetcher, array($SHDObject));
-        $this->assertEquals(count($urls), 10);
+        $this->assertCount(10, $urls);
         $this->assertTrue($askFetcher->cacheHit('http://us.ask.com/web?q=foo'));
         $this->assertFalse($askFetcher->cacheHit('http://us.ask.com/web?q=foo&page=2'));
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=foo&page=2'));
         $urls = $getPageUrls->invokeArgs($askFetcher, array($SHDObject));
-        $this->assertEquals(count($urls), 10);
+        $this->assertCount(10, $urls);
         $this->assertTrue($askFetcher->cacheHit('http://us.ask.com/web?q=foo'));
         $this->assertTrue($askFetcher->cacheHit('http://us.ask.com/web?q=foo&page=2'));
         $askFetcher->flushCache();
@@ -43,7 +43,7 @@ class AskFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=foo'));
         $titles = $getPageTitles->invokeArgs($askFetcher, array($SHDObject));
-        $this->assertEquals(count($titles), 10);
+        $this->assertCount(10, $titles);
         foreach ($titles as $title) {
             $this->assertTrue(is_string($title) && !empty($title));
         }
@@ -52,7 +52,7 @@ class AskFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=foo&page=2'));
         $titles = $getPageTitles->invokeArgs($askFetcher, array($SHDObject));
-        $this->assertEquals(count($titles), 10);
+        $this->assertCount(10, $titles);
         foreach ($titles as $title) {
             $this->assertTrue(is_string($title) && !empty($title));
         }
@@ -72,7 +72,7 @@ class AskFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=foo'));
         $snippets = $getPageSnippets->invokeArgs($askFetcher, array($SHDObject));
-        $this->assertEquals(count($snippets), 10);
+        $this->assertCount(10, $snippets);
         foreach ($snippets as $snippet) {
             $this->assertTrue(is_string($snippet) && !empty($snippet));
         }
@@ -81,7 +81,7 @@ class AskFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($askFetcher,
                                                 array('http://us.ask.com/web?q=foo&page=2'));
         $snippets = $getPageSnippets->invokeArgs($askFetcher, array($SHDObject));
-        $this->assertEquals(count($snippets), 10);
+        $this->assertCount(10, $snippets);
         foreach ($snippets as $snippet) {
             $this->assertTrue(is_string($snippet) && !empty($snippet));
         }
@@ -97,18 +97,18 @@ class AskFetcherTest extends PHPUnit_Framework_TestCase
     {
         $askFetcher = Builder::create('Ask');
         $results = $askFetcher->fetch('http://us.ask.com/web?q=foo');
-        $this->assertTrue(array_key_exists('urls', $results));
-        $this->assertTrue(array_key_exists('titles', $results));
-        $this->assertTrue(array_key_exists('snippets', $results));
-        $this->assertEquals(count($results['urls']), 10);
-        $this->assertEquals(count($results['titles']), 10);
-        $this->assertEquals(count($results['snippets']), 10);
+        $this->assertArrayHasKey('urls', $results);
+        $this->assertArrayHasKey('titles', $results);
+        $this->assertArrayHasKey('snippets', $results);
+        $this->assertCount(10, $results['urls']);
+        $this->assertCount(10, $results['titles']);
+        $this->assertCount(10, $results['snippets']);
         $results = $askFetcher->fetch('http://us.ask.com/web?q=foo&page=2');
-        $this->assertTrue(array_key_exists('urls', $results));
-        $this->assertTrue(array_key_exists('titles', $results));
-        $this->assertTrue(array_key_exists('snippets', $results));
-        $this->assertEquals(count($results['urls']), 10);
-        $this->assertEquals(count($results['titles']), 10);
-        $this->assertEquals(count($results['snippets']), 10);
+        $this->assertArrayHasKey('urls', $results);
+        $this->assertArrayHasKey('titles', $results);
+        $this->assertArrayHasKey('snippets', $results);
+        $this->assertCount(10, $results['urls']);
+        $this->assertCount(10, $results['titles']);
+        $this->assertCount(10, $results['snippets']);
     }
 }

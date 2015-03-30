@@ -20,13 +20,13 @@ class BingFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo'));
         $urls = $getPageUrls->invokeArgs($bingFetcher, array($SHDObject));
-        $this->assertEquals(count($urls), 10);
+        $this->assertCount(10, $urls);
         $this->assertTrue($bingFetcher->cacheHit('http://www.bing.com/search?q=foo'));
         $this->assertFalse($bingFetcher->cacheHit('http://www.bing.com/search?q=foo&first=11'));
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo&first=11'));
         $urls = $getPageUrls->invokeArgs($bingFetcher, array($SHDObject));
-        $this->assertEquals(count($urls), 10);
+        $this->assertCount(10, $urls);
         $this->assertTrue($bingFetcher->cacheHit('http://www.bing.com/search?q=foo'));
         $this->assertTrue($bingFetcher->cacheHit('http://www.bing.com/search?q=foo&first=11'));
         $bingFetcher->flushCache();
@@ -43,7 +43,7 @@ class BingFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo'));
         $titles = $getPageTitles->invokeArgs($bingFetcher, array($SHDObject));
-        $this->assertEquals(count($titles), 10);
+        $this->assertCount(10, $titles);
         foreach ($titles as $title) {
             $this->assertTrue(is_string($title) && !empty($title));
         }
@@ -52,7 +52,7 @@ class BingFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo&first=11'));
         $titles = $getPageTitles->invokeArgs($bingFetcher, array($SHDObject));
-        $this->assertEquals(count($titles), 10);
+        $this->assertCount(10, $titles);
         foreach ($titles as $title) {
             $this->assertTrue(is_string($title) && !empty($title));
         }
@@ -72,7 +72,7 @@ class BingFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo'));
         $snippets = $getPageSnippets->invokeArgs($bingFetcher, array($SHDObject));
-        $this->assertEquals(count($snippets), 10);
+        $this->assertCount(10, $snippets);
         foreach ($snippets as $snippet) {
             $this->assertTrue(is_string($snippet) && !empty($snippet));
         }
@@ -81,7 +81,7 @@ class BingFetcherTest extends PHPUnit_Framework_TestCase
         $SHDObject = $getSHDWrapper->invokeArgs($bingFetcher,
                                                 array('http://www.bing.com/search?q=foo&first=11'));
         $snippets = $getPageSnippets->invokeArgs($bingFetcher, array($SHDObject));
-        $this->assertEquals(count($snippets), 10);
+        $this->assertCount(10, $snippets);
         foreach ($snippets as $snippet) {
             $this->assertTrue(is_string($snippet) && !empty($snippet));
         }
@@ -97,18 +97,18 @@ class BingFetcherTest extends PHPUnit_Framework_TestCase
     {
         $bingFetcher = Builder::create('Bing');
         $results = $bingFetcher->fetch('http://www.bing.com/search?q=foo');
-        $this->assertTrue(array_key_exists('urls', $results));
-        $this->assertTrue(array_key_exists('titles', $results));
-        $this->assertTrue(array_key_exists('snippets', $results));
-        $this->assertEquals(count($results['urls']), 10);
-        $this->assertEquals(count($results['titles']), 10);
-        $this->assertEquals(count($results['snippets']), 10);
+        $this->assertArrayHasKey('urls', $results);
+        $this->assertArrayHasKey('titles', $results);
+        $this->assertArrayHasKey('snippets', $results);
+        $this->assertCount(10, $results['urls']);
+        $this->assertCount(10, $results['titles']);
+        $this->assertCount(10, $results['snippets']);
         $results = $bingFetcher->fetch('http://www.bing.com/search?q=foo&first=10');
-        $this->assertTrue(array_key_exists('urls', $results));
-        $this->assertTrue(array_key_exists('titles', $results));
-        $this->assertTrue(array_key_exists('snippets', $results));
-        $this->assertEquals(count($results['urls']), 10);
-        $this->assertEquals(count($results['titles']), 10);
-        $this->assertEquals(count($results['snippets']), 10);
+        $this->assertArrayHasKey('urls', $results);
+        $this->assertArrayHasKey('titles', $results);
+        $this->assertArrayHasKey('snippets', $results);
+        $this->assertCount(10, $results['urls']);
+        $this->assertCount(10, $results['titles']);
+        $this->assertCount(10, $results['snippets']);
     }
 }
