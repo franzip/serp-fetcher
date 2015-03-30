@@ -1,9 +1,20 @@
 <?php
 
+/**
+ * SerpFetcher -- Wrapper around SimpleHtmlDom to fetch data from Search Engine result pages with cache support.
+ * @version 0.1.0
+ * @author Francesco Pezzella <franzpezzella@gmail.com>
+ * @link https://github.com/franzip/serp-fetcher
+ * @copyright Copyright 2015 Francesco Pezzella
+ * @license http://www.opensource.org/licenses/mit-license.php MIT License
+ * @package SerpFetcher
+ */
+
 namespace Franzip\SerpFetcher\Fetchers;
 
 /**
  * Implements a SerpFetcher for Google search engine.
+ * @package  SerpFetcher
  */
 class GoogleFetcher extends SerpFetcher
 {

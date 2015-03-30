@@ -1,7 +1,7 @@
 {
     "name": "franzip/serp-fetcher",
     "type": "library",
-    "description": "Wrapper around SimpleHtmlDom to easily fetch data from Search Engine Result Pages with built-in caching support",
+    "description": "Wrapper around SimpleHtmlDom to easily fetch data from Search Engine Result Pages with built-in caching support.",
     "license": "MIT",
     "homepage": "http://github.com/franzip/serp-fetcher",
     "keywords": ["serp", "fetch", "data", "search-engine", "simplehtmldom", "cache"],
@@ -19,6 +19,11 @@
     "autoload": {
         "psr-4": {
             "Franzip\\SerpFetcher\\": "src/"
+        }
+    }
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
         }
     }
 }

@@ -2,13 +2,12 @@
 
 namespace Franzip\SerpFetcher\Helpers;
 
+/**
+ * Namespace validation methods.
+ * @package  SerpFetcher
+ */
 class GenericValidator
 {
-    /**
-     * Make the class static
-     */
-    private function __construct() {}
-
     /**
      * Check if content is valid.
      * @param  string $content
@@ -48,7 +47,7 @@ class GenericValidator
     }
 
     /**
-     * Validate cache expiration option
+     * Validate cache expiration option.
      * @param  int $hours
      * @return bool
      */
@@ -58,7 +57,7 @@ class GenericValidator
     }
 
     /**
-     * Validate caching option
+     * Validate caching option.
      * @param  bool $opt
      * @return bool
      */
@@ -68,7 +67,7 @@ class GenericValidator
     }
 
     /**
-     * Validate charset
+     * Validate charset.
      * @param  string $charset
      * @return bool
      */
@@ -76,4 +75,6 @@ class GenericValidator
     {
         return is_string($charset) && !empty($charset);
     }
+
+    private function __construct() {}
 }

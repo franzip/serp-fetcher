@@ -14,7 +14,7 @@ Create a composer.json file in your project root:
 ```
 {
     "require": {
-        "franzip/serp-fetcher": "dev-master"
+        "franzip/serp-fetcher": "0.1.*@dev"
     }
 }
 ```
@@ -184,6 +184,12 @@ $googleFetcher->setCacheDir('foobar');
 $googleFetcher->setCacheDir('foo');
 
 ```
+
+## TODOs
+
+- [ ] A decent exceptions system.
+- [ ] Support for HHVM
+- [ ] Refactoring messy tests.
 
 ## License
 [MIT](http://opensource.org/licenses/MIT/ "MIT") Public License.

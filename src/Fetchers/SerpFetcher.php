@@ -1,10 +1,19 @@
 <?php
 
+/**
+ * SerpFetcher -- Wrapper around SimpleHtmlDom to fetch data from Search Engine result pages with cache support.
+ * @version 0.1.0
+ * @author Francesco Pezzella <franzpezzella@gmail.com>
+ * @link https://github.com/franzip/serp-fetcher
+ * @copyright Copyright 2015 Francesco Pezzella
+ * @license http://www.opensource.org/licenses/mit-license.php MIT License
+ * @package SerpFetcher
+ */
+
 namespace Franzip\SerpFetcher\Fetchers;
 use Franzip\SerpFetcher\Helpers\FileSystemHelper;
 use Franzip\SerpFetcher\Helpers\GenericValidator;
 use ThauEx\SimpleHtmlDom\SimpleHtmlDom;
-
 
 /**
  * Abstract class describing a SerpFetcher.
@@ -14,6 +23,7 @@ use ThauEx\SimpleHtmlDom\SimpleHtmlDom;
  * getPageUrls(), getPageTitles(), getPageSnippets().
  * Usage of a different charset (UTF-8 is used as default) has not been
  * implemented and tested yet.
+ * @package  SerpFetcher
  */
 abstract class SerpFetcher
 {
@@ -49,10 +59,11 @@ abstract class SerpFetcher
     const SHD_DEFAULT_BR_TEXT   = "\r\n";
     const SHD_DEFAULT_SPAN_TEXT = " ";
 
+    // default opts to normalize fetched results
     const DEFAULT_RESULT_NUMBER = 10;
     const DEFAULT_PAD_ENTRY     = "PAD";
 
-    // Search engine specific methods.
+    // search engine specific methods
     abstract protected function getPageUrls($SHDObject);
     abstract protected function getPageTitles($SHDObject);
     abstract protected function getPageSnippets($SHDObject);

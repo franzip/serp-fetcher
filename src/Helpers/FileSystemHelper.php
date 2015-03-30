@@ -2,13 +2,12 @@
 
 namespace Franzip\SerpFetcher\Helpers;
 
+/**
+ * Namespace filesystem related methods.
+ * @package  SerpFetcher
+ */
 class FileSystemHelper
 {
-    /**
-     * Make the class static
-     */
-    private function __constructor() {}
-
     /**
      * Check if a given cache entry is still valid.
      * Will always return true if permanent caching has been set on.
@@ -92,4 +91,6 @@ class FileSystemHelper
                 rmdir($dir);
         }
     }
+
+    private function __constructor() {}
 }
