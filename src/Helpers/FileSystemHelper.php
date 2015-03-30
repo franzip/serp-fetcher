@@ -16,7 +16,7 @@ class FileSystemHelper
      * @param  bool   $cacheForever
      * @return bool
      */
-    static public function validCache($file, $cacheTTL, $cacheForever)
+    static public function validateCache($file, $cacheTTL, $cacheForever)
     {
         $currentTime = time();
         $expireTime  = $cacheTTL * 60 * 60;
