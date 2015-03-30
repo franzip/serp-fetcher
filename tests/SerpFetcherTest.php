@@ -434,8 +434,8 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($bingFetcher->cacheHit("http://www.bing.com/search?q=baz"));
         $this->assertTrue($bingFetcher->cacheHit("http://www.bing.com/search?q=foobar"));
 
-        $yahooFetcher = Builder::create($this->engines[2],
-                                       array('fubar', 48, true, true, 'UTF-16'));
+        $yahooFetcher = Builder::create($this->engines[3],
+                                        array('fubar', 48, true, true, 'UTF-16'));
         $fetchSerpContent = TestHelper::getMethod('fetchSerpContent', 'Yahoo');
         $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Yahoo');
         $this->assertFalse($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=foo"));
