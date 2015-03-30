@@ -438,7 +438,6 @@ class SerpFetcherTest extends PHPUnit_Framework_TestCase
                                        array('fubar', 48, true, true, 'UTF-16'));
         $fetchSerpContent = TestHelper::getMethod('fetchSerpContent', 'Yahoo');
         $getSHDWrapper = TestHelper::getMethod('getSHDWrapper', 'Yahoo');
-
         $this->assertFalse($yahooFetcher->cacheHit("https://search.yahoo.com/search?q=foo"));
         $fetchedContent = $fetchSerpContent->invokeArgs($yahooFetcher,
                                                         array('https://search.yahoo.com/search?q=foo'));
