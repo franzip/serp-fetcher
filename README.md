@@ -188,7 +188,7 @@ $googleFetcher->setCacheDir('foo');
 ## TODOs
 
 - [x] A decent exceptions system.
-- [ ] Support for HHVM.
+- [x] Support for HHVM.
 - [ ] Implement and test different charset support.
 - [x] Refactoring messy tests.
 
