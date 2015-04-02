@@ -16,7 +16,7 @@ class FileSystemHelper
      * @param  bool   $cacheForever
      * @return bool
      */
-    static public function validateCache($file, $cacheTTL, $cacheForever)
+    public static function validateCache($file, $cacheTTL, $cacheForever)
     {
         $currentTime = time();
         $expireTime  = $cacheTTL * 60 * 60;
@@ -32,7 +32,7 @@ class FileSystemHelper
      * @param  string $cacheDir
      * @return string
      */
-    static public function getCachedEntry($url, $cacheDir)
+    public static function getCachedEntry($url, $cacheDir)
     {
         return $cacheDir . DIRECTORY_SEPARATOR . md5($url);
     }
@@ -42,7 +42,7 @@ class FileSystemHelper
      * @param  string $file
      * @return bool
      */
-    static public function cacheEntryExists($file)
+    public static function cacheEntryExists($file)
     {
         return file_exists($file);
     }
@@ -51,7 +51,7 @@ class FileSystemHelper
      * Create a folder if it isn't there yet.
      * @param string $dir
      */
-    static public function setUpDir($dir)
+    public static function setUpDir($dir)
     {
         if (!self::folderExists($dir)) {
             mkdir($dir, 0755, true);
@@ -63,7 +63,7 @@ class FileSystemHelper
      * @param  string $dir
      * @return bool
      */
-    static public function folderExists($dir)
+    public static function folderExists($dir)
     {
         return file_exists($dir) && is_dir($dir);
     }
@@ -74,7 +74,7 @@ class FileSystemHelper
      * @param  string  $dir
      * @param  bool    $removeDirs
      */
-    static public function rrmdir($dir, $removeDirs = true)
+    public static function rrmdir($dir, $removeDirs = true)
     {
         if (is_dir($dir)) {
             $objects = scandir($dir);

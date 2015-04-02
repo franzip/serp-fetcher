@@ -14,7 +14,7 @@ class GenericValidator
      * @param  int    $size
      * @return bool
      */
-    static public function invalidContent($content, $size)
+    public static function invalidContent($content, $size)
     {
         return (empty($content) || strlen($content) > $size);
     }
@@ -27,7 +27,7 @@ class GenericValidator
      * @param  bool   $cacheForever
      * @param  string $charset
      */
-    static public function argsValidation($cacheDir, $cacheTTL, $caching,
+    public static function argsValidation($cacheDir, $cacheTTL, $caching,
                                           $cacheForever, $charset)
     {
         if (!self::validateDirName($cacheDir))
@@ -51,7 +51,7 @@ class GenericValidator
      * @param  string $dir
      * @return bool
      */
-    static public function validateDirName($dir)
+    public static function validateDirName($dir)
     {
         return is_string($dir) && !empty($dir);
     }
@@ -61,7 +61,7 @@ class GenericValidator
      * @param  int $hours
      * @return bool
      */
-    static public function validateExpirationTime($hours)
+    public static function validateExpirationTime($hours)
     {
         return is_int($hours) && $hours > 0;
     }
@@ -71,7 +71,7 @@ class GenericValidator
      * @param  bool $opt
      * @return bool
      */
-    static public function validateCacheOpt($opt)
+    public static function validateCacheOpt($opt)
     {
         return is_bool($opt);
     }
@@ -81,7 +81,7 @@ class GenericValidator
      * @param  string $charset
      * @return bool
      */
-    static public function validateCharset($charset)
+    public static function validateCharset($charset)
     {
         return is_string($charset) && !empty($charset);
     }
