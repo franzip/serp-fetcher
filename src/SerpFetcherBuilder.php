@@ -37,7 +37,7 @@ class SerpFetcherBuilder
         if (self::validEngine($engine)) {
             return (isset($args)) ? self::createWithArgs($engine, $args) : self::createWithArgs($engine, array());
         }
-        throw new \Franzip\SerpFetcher\Exceptions\UnsupportedEngineException('Unknown or unsupported Search Engine.');
+        throw new \Franzip\SerpFetcher\Exceptions\UnsupportedEngineException('Invalid SerpFetcher $engine: unknown/unsupported Search Engine. Supported engines are: \'google\', \'ask\', \'bing\', \'yahoo\'');
     }
 
     /**

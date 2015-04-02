@@ -22,7 +22,7 @@ class SerpFetcherBuilderTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \Franzip\SerpFetcher\Exceptions\UnsupportedEngineException
-     * @expectedExceptionMessage Unknown or unsupported Search Engine.
+     * @expectedExceptionMessage Invalid SerpFetcher $engine: unknown/unsupported Search Engine. Supported engines are: 'google', 'ask', 'bing', 'yahoo'
      */
     public function testInvalidEngineArgument()
     {
