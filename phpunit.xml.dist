@@ -9,6 +9,15 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false">
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+            <exclude>
+                <directory>./vendor</directory>
+                <directory>./tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
     <testsuites>
         <testsuite name="SerpFetcherBuilder TestSuite">
             <directory>tests/</directory>
