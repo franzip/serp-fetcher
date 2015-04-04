@@ -299,6 +299,7 @@ abstract class SerpFetcher
     protected function cleanText($text)
     {
         $strippedText = strip_tags($text);
+        $strippedText = htmlentities($strippedText, ENT_QUOTES, $this->getCharset(), FALSE);
         return html_entity_decode($strippedText, ENT_QUOTES, $this->getCharset());
     }
 
