@@ -9,6 +9,7 @@
     "name": "Francesco Pezzella",
     "email": "franzpezzella@gmail.com"
   }],
+  "minimum-stability": "dev",
   "require": {
     "php": ">=5.4.0",
     "thauex/simple-html-dom": "dev-master"
